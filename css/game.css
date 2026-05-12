@@ -9,10 +9,13 @@
 
 * { box-sizing: border-box; }
 
+html {
+  background: var(--bg);
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -21,38 +24,53 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-::selection { background: var(--cr-red); color: #fff; }
-
+/* The CR Coffee fireplace as a hero photograph anchored to the top of
+ * the page. Photo extends to body width; a gradient overlay (sized to
+ * match the photo) fades it to cream right under the R, so the game
+ * tiles "emerge" from the washed-out lower portion of the photo. */
 body {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  justify-content: center;
-}
-
-/* The full fireplace photo lives behind the page content, with a cream
- * gradient fading it from R bottom downward so the board sits on a
- * washed-out version of the cavity instead of the full-saturation image. */
-#app {
-  width: 100%;
-  max-width: 520px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  background-image: url('../assets/img/fireplace.jpg');
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
+}
+
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  aspect-ratio: 1200 / 1468;
+  background: linear-gradient(180deg,
+    rgba(250, 248, 245, 0) 0%,
+    rgba(250, 248, 245, 0) 47%,
+    rgba(250, 248, 245, 0.40) 56%,
+    rgba(250, 248, 245, 0.85) 70%,
+    var(--bg) 84%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+::selection { background: var(--cr-red); color: #fff; }
+
+#app {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-  background-image:
-    linear-gradient(180deg,
-      rgba(250, 248, 245, 0) 0%,
-      rgba(250, 248, 245, 0) 42%,
-      rgba(250, 248, 245, 0.45) 55%,
-      rgba(250, 248, 245, 0.85) 70%,
-      var(--bg) 85%),
-    url('../assets/img/fireplace.jpg');
-  background-size: 100% auto, 100% auto;
-  background-position: center top, center top;
-  background-repeat: no-repeat, no-repeat;
-  background-color: var(--bg);
+  background: transparent;
 }
 
 /* ==========================================================================
@@ -159,17 +177,17 @@ body {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Board lands where the R of CR ends in the photo, sitting visually
- * inside the wooden cavity. The photo is positioned via the #app
- * background (100% width, natural aspect), so R bottom is at ~52% of
- * #app width. Padding-top targets that minus the header height. */
+/* Photo height = body_width * 1.223 (photo aspect 1200×1468).
+ * R bottom = photo height * 0.514 = body_width * 0.629.
+ * Board top should sit right at R bottom, accounting for the header.
+ * Using % of containing block width keeps it consistent across devices. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: calc(52% - 56px) var(--side-pad-min) var(--space-md);
+  padding: calc(62.9% - 64px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
