@@ -69,7 +69,17 @@ body {
   border-bottom: 0;
 }
 
-.app-header__spacer { flex: 1; }
+.app-header__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
+  letter-spacing: -0.005em;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.8);
+}
 
 /* ==========================================================================
  * Masthead — CR Coffee Shop logo + "The Daily Grind" subtitle
@@ -79,33 +89,9 @@ body {
  * trying to mimic the unlicensed display font.
  * ========================================================================== */
 
-/* The masthead occupies the upper half of the viewport. Its title/eyebrow
- * sit visually over the CR sign in the photo; below them is empty space
- * that exposes the wooden mantel. The board starts where the masthead
- * ends (~48vh) — right under the mantel. */
-.masthead {
-  text-align: center;
-  padding: 11vh var(--space-md) 0;
-  min-height: 48vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  background: transparent;
-  border-bottom: 0;
-}
-
-.masthead__title {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 700;
-  font-size: clamp(1.75rem, 1.4rem + 2vw, 2.5rem);
-  letter-spacing: -0.005em;
-  line-height: 1.1;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.8);
-}
+/* Masthead is gone — the title moved into the sticky header.
+ * Empty space above the board (board-wrap padding) reveals the CR sign
+ * and wooden mantel from the photo. */
 
 .app-header__actions {
   display: flex;
@@ -155,13 +141,16 @@ body {
  * Board
  * ========================================================================== */
 
+/* The board sits in the cement cavity of the fireplace photo. The
+ * padding-top pushes it down past the CR sign + wooden mantel so the
+ * board's top edge lands right where the cavity opening begins. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: var(--space-sm) var(--side-pad-min) var(--space-md);
+  padding: clamp(180px, 38vh, 320px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
