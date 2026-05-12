@@ -168,7 +168,7 @@ async function submit() {
     return;
   }
   if (!VALID_WORDS.has(game.pending)) {
-    showToast(els.toast(), 'Not in word list');
+    showToast(els.toast(), 'Not in word list — backspace to try again', 2400);
     shakeRow(els.board(), game.guesses.length);
     return;
   }

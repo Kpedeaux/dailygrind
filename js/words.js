@@ -405,8 +405,123 @@ const VALID_EXTRA = [
   'ZESTY', 'ZONAL',
 ];
 
+/* --------------------------------------------------------------------------
+ * COMMON_PLURALS — common five-letter -S plurals and -S verb conjugations
+ * that English speakers reach for. These are the words players try first
+ * and the dictionary needs to cover them.
+ * -------------------------------------------------------------------------- */
+const COMMON_PLURALS = [
+  'BAILS', 'BALES', 'BALLS', 'BANES', 'BANGS', 'BARES', 'BARNS', 'BASES',
+  'BEAKS', 'BEAMS', 'BEARS', 'BEATS', 'BEEPS', 'BEERS', 'BELLS', 'BELTS',
+  'BENDS', 'BENTS', 'BERRY', 'BESTS', 'BETAS', 'BIKES', 'BILLS', 'BINDS',
+  'BIRDS', 'BITES', 'BITES', 'BLOBS', 'BLOGS', 'BLOWS', 'BOARS', 'BOATS',
+  'BOLTS', 'BOMBS', 'BONDS', 'BOOKS', 'BOOMS', 'BOOTS', 'BORES', 'BOSSES',
+  'BOWLS', 'BOXES', 'BRAGS', 'BRAYS', 'BREDS', 'BUCKS', 'BUDGE', 'BULBS',
+  'BULKS', 'BULLS', 'BUMPS', 'BUNKS', 'BURDS', 'BURNS', 'BURPS', 'BUSES',
+  'BUSTS', 'CABLES', 'CAFES', 'CAGES', 'CAKES', 'CALLS', 'CAMPS', 'CANES',
+  'CAPES', 'CARDS', 'CARES', 'CARTS', 'CASES', 'CASTS', 'CAVES', 'CELLS',
+  'CHIPS', 'CLAMS', 'CLAPS', 'CLAWS', 'CLAYS', 'CLOGS', 'CLOPS', 'CLOTS',
+  'CLUBS', 'CLUES', 'COALS', 'COATS', 'CODES', 'COILS', 'COINS', 'COLDS',
+  'COMBS', 'CONES', 'COOKS', 'COOLS', 'COPES', 'COPSE', 'CORDS', 'CORES',
+  'CORKS', 'CORNS', 'COSTS', 'COVES', 'COWLS', 'COWLS', 'CRABS', 'CRAGS',
+  'CRAMS', 'CREWS', 'CRIBS', 'CROWS', 'CUBES', 'CUFFS', 'CULTS', 'CUPID',
+  'CURBS', 'CURES', 'CURLS', 'CYSTS', 'DAMES', 'DAMPS', 'DARES', 'DARTS',
+  'DATES', 'DAWNS', 'DEALS', 'DEANS', 'DECKS', 'DEEDS', 'DEEPS', 'DELLS',
+  'DENTS', 'DESKS', 'DICED', 'DICES', 'DIETS', 'DIMES', 'DINES', 'DOCKS',
+  'DOLLS', 'DOMES', 'DONES', 'DOSES', 'DOTES', 'DRAGS', 'DRAMS', 'DRAWS',
+  'DRIPS', 'DROPS', 'DRUGS', 'DUCKS', 'DUCTS', 'DUELS', 'DUKES', 'DUMPS',
+  'DUNES', 'DUSTS', 'EBBED', 'ECHOS', 'EDGES', 'ELFIN', 'ELMS', 'ENVYS',
+  'EPICS', 'ERAS', 'EVENS', 'EVILS', 'EXAMS', 'EXITS', 'EXTRA', 'FACES',
+  'FACTS', 'FADES', 'FAILS', 'FAIRS', 'FAKES', 'FALLS', 'FAMES', 'FANGS',
+  'FARMS', 'FARTS', 'FATES', 'FAWNS', 'FEARS', 'FEEDS', 'FEELS', 'FEES',
+  'FELLS', 'FENDS', 'FERNS', 'FILES', 'FILLS', 'FILMS', 'FINDS', 'FINES',
+  'FIRES', 'FIRMS', 'FISTS', 'FITS', 'FIVES', 'FIXES', 'FLAGS', 'FLAKE',
+  'FOAMS', 'FOCUS', 'FOES', 'FOILS', 'FOLDS', 'FOLKS', 'FONTS', 'FORDS',
+  'FORKS', 'FORMS', 'FORTS', 'FOULS', 'FOWLS', 'FOXES', 'FRAYS', 'FRETS',
+  'FRIES', 'FROGS', 'FUELS', 'FUMES', 'FUNDS', 'FUSES', 'GAINS', 'GALES',
+  'GAMES', 'GANGS', 'GATES', 'GAZES', 'GEARS', 'GENES', 'GERMS', 'GIFTS',
+  'GILLS', 'GIRLS', 'GIVES', 'GOATS', 'GOLFS', 'GONGS', 'GORES', 'GRABS',
+  'GRADS', 'GRAMS', 'GRINS', 'GRIPS', 'GROWS', 'GULFS', 'GULLS', 'GURUS',
+  'HAILS', 'HAIRS', 'HALLS', 'HALTS', 'HANDS', 'HANGS', 'HARES', 'HARMS',
+  'HASPS', 'HATES', 'HAULS', 'HAVES', 'HAWKS', 'HEADS', 'HEALS', 'HEAPS',
+  'HEARS', 'HEATS', 'HEELS', 'HELLS', 'HELMS', 'HELPS', 'HERDS', 'HEROS',
+  'HIDES', 'HIKES', 'HILLS', 'HINTS', 'HIRES', 'HIVES', 'HOLDS', 'HOLES',
+  'HOMES', 'HONES', 'HOODS', 'HOOFS', 'HOOKS', 'HOOPS', 'HOOTS', 'HOPES',
+  'HORNS', 'HOSES', 'HOSTS', 'HOURS', 'HOWLS', 'HULKS', 'HULLS', 'HUMPS',
+  'HUNTS', 'HURLS', 'HURTS', 'HUSKS', 'HYMNS', 'IRONS', 'ITEMS', 'JADES',
+  'JAILS', 'JEANS', 'JEEPS', 'JEERS', 'JELLS', 'JESTS', 'JOLTS', 'JOWLS',
+  'JUMPS', 'JUNKS', 'KEEPS', 'KELPS', 'KICKS', 'KILLS', 'KILNS', 'KILTS',
+  'KINGS', 'KINKS', 'KITES', 'KNITS', 'KNOTS', 'LACES', 'LAIRS', 'LAKES',
+  'LAMBS', 'LAMES', 'LAMPS', 'LANES', 'LARDS', 'LARKS', 'LASTS', 'LAWNS',
+  'LEADS', 'LEAFS', 'LEANS', 'LEAPS', 'LEERS', 'LENDS', 'LIARS', 'LICKS',
+  'LIFTS', 'LIMBS', 'LIMES', 'LIMPS', 'LINES', 'LINKS', 'LINTS', 'LISTS',
+  'LIVES', 'LOADS', 'LOAFS', 'LOANS', 'LOCKS', 'LONGS', 'LOOKS', 'LOOMS',
+  'LOOPS', 'LOOTS', 'LORDS', 'LOSES', 'LOVES', 'LUCKS', 'LULLS', 'LUMPS',
+  'LUNGS', 'LURES', 'LUSTS', 'LUTES', 'MAIDS', 'MAILS', 'MAINS', 'MAKES',
+  'MALES', 'MALLS', 'MANES', 'MARES', 'MARKS', 'MARTS', 'MASTS', 'MATES',
+  'MAULS', 'MAZES', 'MEALS', 'MEANS', 'MEATS', 'MEETS', 'MELDS', 'MENDS',
+  'METES', 'MIENS', 'MIKES', 'MILES', 'MILKS', 'MILLS', 'MIMES', 'MINDS',
+  'MINES', 'MINKS', 'MINTS', 'MISTS', 'MITES', 'MITTS', 'MOANS', 'MOATS',
+  'MOCKS', 'MODES', 'MOLDS', 'MOLES', 'MOLTS', 'MONKS', 'MOODS', 'MOONS',
+  'MOORS', 'MORES', 'MOTHS', 'MOVES', 'MUFFS', 'MULES', 'MUSES', 'MUSTS',
+  'MUTES', 'MYTHS', 'NAILS', 'NAMES', 'NARCS', 'NEEDS', 'NESTS', 'NICKS',
+  'NINES', 'NODES', 'NOSES', 'NOTES', 'NOUNS', 'OATHS', 'ODORS', 'OINKS',
+  'OKAYS', 'OPALS', 'OPENS', 'OVALS', 'OVENS', 'PACES', 'PACKS', 'PACTS',
+  'PAGES', 'PAILS', 'PAINS', 'PAIRS', 'PALES', 'PALMS', 'PANES', 'PANGS',
+  'PANTS', 'PARTS', 'PASTS', 'PATHS', 'PAVES', 'PAWNS', 'PEAKS', 'PEALS',
+  'PEARS', 'PEATS', 'PECKS', 'PEEKS', 'PEELS', 'PEEPS', 'PEERS', 'PELTS',
+  'PERKS', 'PESTS', 'PICKS', 'PIKES', 'PILES', 'PILLS', 'PINES', 'PINKS',
+  'PINTS', 'PIPES', 'PITHS', 'PLAYS', 'PLEAS', 'PLODS', 'PLOPS', 'PLOTS',
+  'PLOWS', 'PLOYS', 'PLUGS', 'PLUMS', 'POEMS', 'POETS', 'POKES', 'POLES',
+  'POLLS', 'PONDS', 'POOLS', 'POOPS', 'PORES', 'PORKS', 'PORTS', 'POSES',
+  'POSTS', 'POUTS', 'PRAMS', 'PRAYS', 'PREPS', 'PREYS', 'PRIES', 'PROPS',
+  'PROWS', 'PUCKS', 'PUFFS', 'PULPS', 'PUMPS', 'PUNKS', 'PUNTS', 'PURRS',
+  'PUTTS', 'QUADS', 'QUAYS', 'QUITS', 'RACES', 'RACKS', 'RAFTS', 'RAGES',
+  'RAIDS', 'RAILS', 'RAINS', 'RAJAS', 'RAKES', 'RAMPS', 'RANKS', 'RANTS',
+  'RAPES', 'RARES', 'RASPS', 'RATES', 'RAVES', 'READS', 'REAMS', 'REAPS',
+  'REARS', 'REEDS', 'REEFS', 'REEKS', 'REELS', 'REINS', 'RENTS', 'RESTS',
+  'RICES', 'RIDES', 'RIFTS', 'RINDS', 'RINGS', 'RINKS', 'RIOTS', 'RIPES',
+  'RISES', 'RISKS', 'ROADS', 'ROAMS', 'ROARS', 'ROBES', 'ROCKS', 'ROLES',
+  'ROLLS', 'ROMPS', 'ROOFS', 'ROOKS', 'ROOMS', 'ROOTS', 'ROPES', 'ROSES',
+  'ROVES', 'RUINS', 'RULES', 'RUMPS', 'RUNES', 'RUNGS', 'RUNTS', 'RUSES',
+  'RUSTS', 'SACKS', 'SAGAS', 'SAGES', 'SAILS', 'SAKES', 'SALES', 'SALTS',
+  'SANDS', 'SAVES', 'SCABS', 'SCANS', 'SCARS', 'SCATS', 'SCOWS', 'SCUDS',
+  'SEALS', 'SEAMS', 'SEATS', 'SECTS', 'SEEDS', 'SEEKS', 'SEEMS', 'SEERS',
+  'SELLS', 'SENDS', 'SHIPS', 'SHOPS', 'SHOWS', 'SIDES', 'SIGHS', 'SIGNS',
+  'SILOS', 'SILTS', 'SINGS', 'SINKS', 'SIRES', 'SITES', 'SIZES', 'SKIES',
+  'SKIMS', 'SKINS', 'SKIPS', 'SLABS', 'SLAPS', 'SLATS', 'SLAYS', 'SLEDS',
+  'SLEWS', 'SLIPS', 'SLOPS', 'SLOTS', 'SLOWS', 'SLUGS', 'SLUMS', 'SLURS',
+  'SMOGS', 'SNAGS', 'SNAPS', 'SNIPS', 'SNOBS', 'SNOWS', 'SNUBS', 'SOAKS',
+  'SOAPS', 'SOARS', 'SOCKS', 'SODAS', 'SOFAS', 'SOILS', 'SOLES', 'SOLOS',
+  'SONGS', 'SOOTS', 'SORTS', 'SOULS', 'SPANS', 'SPARS', 'SPATS', 'SPECS',
+  'SPIES', 'SPINS', 'SPITS', 'SPOTS', 'SPURS', 'STARS', 'STAYS', 'STEMS',
+  'STEPS', 'STEWS', 'STOPS', 'STUBS', 'STUDS', 'STUNS', 'SUITS', 'SWABS',
+  'SWANS', 'SWAPS', 'SWAYS', 'TACOS', 'TACKS', 'TAILS', 'TALES', 'TALKS',
+  'TAMES', 'TANGS', 'TANKS', 'TAPES', 'TARES', 'TARPS', 'TARTS', 'TASKS',
+  'TAXIS', 'TEAMS', 'TEARS', 'TELLS', 'TENTS', 'TERMS', 'TESTS', 'TEXTS',
+  'THUDS', 'TICKS', 'TIDES', 'TIFFS', 'TILES', 'TILLS', 'TILTS', 'TIMES',
+  'TINTS', 'TIRES', 'TOADS', 'TOGAS', 'TOILS', 'TOLLS', 'TOMBS', 'TOMES',
+  'TONES', 'TONGS', 'TOOLS', 'TOOTS', 'TORTS', 'TOURS', 'TOWNS', 'TRAMS',
+  'TRAPS', 'TRAYS', 'TREES', 'TREKS', 'TRIPS', 'TROTS', 'TUBAS', 'TUBES',
+  'TUCKS', 'TUFTS', 'TUNAS', 'TUNES', 'TURFS', 'TURNS', 'TUSKS', 'TWIGS',
+  'TWINS', 'TYPES', 'VANES', 'VASES', 'VEALS', 'VEINS', 'VENTS', 'VESTS',
+  'VIALS', 'VIBES', 'VIEWS', 'VINES', 'VOLTS', 'VOTES', 'WADES', 'WAGES',
+  'WAILS', 'WAITS', 'WAKES', 'WALKS', 'WALLS', 'WANDS', 'WANES', 'WANTS',
+  'WARDS', 'WARES', 'WARMS', 'WARNS', 'WARPS', 'WARTS', 'WASPS', 'WAVES',
+  'WAXES', 'WEARS', 'WEEKS', 'WEEPS', 'WELDS', 'WELLS', 'WELTS', 'WHIMS',
+  'WHIPS', 'WHIRS', 'WICKS', 'WIDES', 'WILDS', 'WILLS', 'WILTS', 'WINDS',
+  'WINES', 'WINGS', 'WINKS', 'WIPES', 'WIRES', 'WOLFS', 'WOMBS', 'WOODS',
+  'WOOFS', 'WORDS', 'WORKS', 'WORMS', 'YANKS', 'YARDS', 'YARNS', 'YAWNS',
+  'YEARS', 'YELLS', 'YELPS', 'YOLKS', 'YULES', 'ZEROS', 'ZINCS', 'ZONES',
+  'ZOOMS',
+];
+
 // Combined valid list (Set for O(1) lookup)
-export const VALID_WORDS = new Set([...ANSWERS, ...VALID_EXTRA]);
+export const VALID_WORDS = new Set([
+  ...ANSWERS,
+  ...VALID_EXTRA,
+  ...COMMON_PLURALS.filter(w => w.length === 5),
+]);
 
 /* --------------------------------------------------------------------------
  * Day index — number of days elapsed since LAUNCH_DATE, computed in
@@ -428,7 +543,6 @@ export function getTodaysWord(now = new Date()) {
 
 /** Number of milliseconds until the next Chicago midnight. */
 export function msUntilNextPuzzle(now = new Date()) {
-  // Build a Date object representing midnight tomorrow in Chicago time
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Chicago',
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -436,28 +550,22 @@ export function msUntilNextPuzzle(now = new Date()) {
     hourCycle: 'h23',
   }).formatToParts(now);
   const get = type => parts.find(p => p.type === type).value;
-  // Chicago "wall time" right now:
   const wallNow = new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
-  // Tomorrow midnight in Chicago wall time:
   const wallMidnight = new Date(wallNow);
   wallMidnight.setHours(24, 0, 0, 0);
-  // Diff is the same regardless of timezone interpretation, since both
-  // are interpreted as the same local time.
   return wallMidnight - wallNow;
 }
 
 /* -------- internal -------- */
 
-/** Return current date as YYYY-MM-DD in America/Chicago. */
 function chicagoYMD(date) {
   const fmt = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Chicago',
     year: 'numeric', month: '2-digit', day: '2-digit',
   });
-  return fmt.format(date); // en-CA produces YYYY-MM-DD
+  return fmt.format(date);
 }
 
-/** Convert YYYY-MM-DD to a UTC millisecond timestamp (noon UTC to avoid DST edges). */
 function ymdToUtc(ymd) {
   const [y, m, d] = ymd.split('-').map(Number);
   return Date.UTC(y, m - 1, d, 12, 0, 0);
