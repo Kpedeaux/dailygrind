@@ -7,7 +7,7 @@
 
 import { RESULT } from './game.js';
 import { buildShareText, copyToClipboard, nativeShare } from './share.js';
-import { trackShare } from './analytics.js';
+import { trackShare, trackVisitCRClick } from './analytics.js';
 
 const overlayEl = () => document.getElementById('overlay');
 
@@ -231,20 +231,17 @@ export function showStats({
       shareBtn.type = 'button';
       shareBtn.textContent = 'Share Result';
       shareBtn.addEventListener('click', async () => {
-        const text = buildShareText({
-          rows,
-          won: finishedToday === 'win',
-          day,
-          hardMode,
-        });
+        const won = finishedToday === 'win';
+        const guesses = rows ? rows.length : 0;
+        const text = buildShareText({ rows, won, day, hardMode });
         const shared = await nativeShare(text);
         if (shared) {
-          trackShare(day, 'native');
+          trackShare(day, 'native', won, guesses);
         } else {
           const copied = await copyToClipboard(text);
           if (copied) {
             shareBtn.textContent = 'Copied!';
-            trackShare(day, 'clipboard');
+            trackShare(day, 'clipboard', won, guesses);
             setTimeout(() => { shareBtn.textContent = 'Share Result'; }, 1800);
           } else {
             shareBtn.textContent = 'Copy failed';
@@ -260,6 +257,7 @@ export function showStats({
       visitBtn.type = 'button';
       visitBtn.textContent = 'Visit CR';
       visitBtn.addEventListener('click', () => {
+        trackVisitCRClick('stats_overlay');
         window.open('https://crcoffeenola.com/', '_blank', 'noopener');
       });
       btnRow.appendChild(visitBtn);
