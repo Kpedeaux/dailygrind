@@ -22,7 +22,7 @@
   <!-- Google Fonts: Playfair Display (editorial serif), Inter (body), JetBrains Mono (eyebrow labels) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/game.css" />
@@ -39,8 +39,9 @@
 <body>
   <div id="app">
     <header class="app-header">
-      <a class="app-header__brand" href="https://crcoffeenola.com" target="_blank" rel="noopener" aria-label="CR Coffee Shop">
-        <img class="app-header__monogram" src="assets/img/cr-monogram.jpg" alt="" />
+      <a class="app-header__brand" href="https://crcoffeenola.com" target="_blank" rel="noopener" aria-label="CR Coffee Shop home">
+        <span class="app-header__mark">CR</span>
+        <span class="app-header__divider" aria-hidden="true"></span>
         <span class="app-header__title">The Daily Grind</span>
       </a>
       <div class="app-header__actions">
@@ -50,7 +51,7 @@
       </div>
     </header>
 
-    <p class="board-eyebrow">New Orleans · Est. 2015</p>
+    <p class="board-eyebrow">Five Letters · Six Guesses · One a Day</p>
 
     <main class="board-wrap">
       <div id="board" class="board" role="grid" aria-label="Guess board"></div>
