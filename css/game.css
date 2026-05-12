@@ -34,7 +34,7 @@ body {
   margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
-  background-image: url('../assets/img/fireplace.jpg');
+  background-image: url('../assets/img/fireplace-cr.jpg');
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
@@ -49,17 +49,14 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  /* Overlay extends from top all the way to body bottom — guarantees
-   * the photo cannot peek out below the fade no matter how tall the
-   * photo file is (cached older photos included). Gradient stops are
-   * calibrated to photo bottom on 820-wide body. */
+  /* Aspect matches the new fireplace-cr.jpg (1200×619) so the fade
+   * sits exactly over the photo. Below ::after, body bg-color cream
+   * takes over naturally. */
+  aspect-ratio: 1200 / 619;
   background: linear-gradient(180deg,
-    rgba(250, 248, 245, 0) 0px,
-    rgba(250, 248, 245, 0) 470px,
-    rgba(250, 248, 245, 0.55) 530px,
-    rgba(250, 248, 245, 0.92) 580px,
-    var(--bg) 640px,
+    rgba(250, 248, 245, 0) 0%,
+    rgba(250, 248, 245, 0) 80%,
+    rgba(250, 248, 245, 0.6) 90%,
     var(--bg) 100%);
   pointer-events: none;
   z-index: 1;
@@ -182,16 +179,16 @@ body::after {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Photo crop is now CR-only (1200×793). R bottom sits at 92.5% of photo.
- * Photo height = body_width * 0.661, so R bottom = body_width * 0.612.
- * Board top is pulled up right below R with a small breathing gap. */
+/* Photo is now 1200×619 (CR ONLY, no mantel). Aspect 1.94, so photo
+ * height = body_width * 0.516. Board sits right under the photo edge
+ * with a tiny gap — no dead space between CR and the tiles. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: calc(63% - 60px) var(--side-pad-min) var(--space-md);
+  padding: calc(52% - 60px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
