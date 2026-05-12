@@ -49,17 +49,16 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  /* Matches photo aspect (1200×1388) exactly. CR fully visible in the
-   * top half (transparent until 50%), fade kicks in right after R
-   * bottom (~57%), fully cream by 75% — covering the cavity + any
-   * lower portion so the board sits on a wash, not raw photo. */
+  /* Aspect matches the fireplace-full.jpg photo (1200×1388). Fade
+   * starts right under the R letter so the mantel + cavity area
+   * behind the board is washed out. */
   aspect-ratio: 1200 / 1388;
   background: linear-gradient(180deg,
     rgba(250, 248, 245, 0) 0%,
-    rgba(250, 248, 245, 0) 50%,
-    rgba(250, 248, 245, 0.5) 60%,
-    rgba(250, 248, 245, 0.92) 72%,
-    var(--bg) 82%,
+    rgba(250, 248, 245, 0) 32%,
+    rgba(250, 248, 245, 0.45) 42%,
+    rgba(250, 248, 245, 0.88) 55%,
+    var(--bg) 68%,
     var(--bg) 100%);
   pointer-events: none;
   z-index: 1;
@@ -182,17 +181,16 @@ body::after {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Photo is fireplace-full.jpg (1200×1388). R bottom sits at 57.1% of
- * photo. Photo height = body_width * 1.156, so R bottom in body coords
- * = body_width * 0.660. Board top lands right at R bottom — no gap,
- * board overlaps the (faded) mantel/cavity area behind it. */
+/* Photo is fireplace-full.jpg. Board top lands right under the R
+ * letterform — overlapping the mantel items / wooden mantel area so
+ * the game appears INSIDE the fireplace, not below it. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: calc(66% - 60px) var(--side-pad-min) var(--space-md);
+  padding: calc(40% - 60px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
