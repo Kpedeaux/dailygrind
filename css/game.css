@@ -49,15 +49,17 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  /* Match photo aspect (1200×793) plus a cream-extension tail so the
-   * gradient continues hiding any seam where the photo ends. */
-  aspect-ratio: 1200 / 950;
+  bottom: 0;
+  /* Overlay extends from top all the way to body bottom — guarantees
+   * the photo cannot peek out below the fade no matter how tall the
+   * photo file is (cached older photos included). Gradient stops are
+   * calibrated to photo bottom on 820-wide body. */
   background: linear-gradient(180deg,
-    rgba(250, 248, 245, 0) 0%,
-    rgba(250, 248, 245, 0) 70%,
-    rgba(250, 248, 245, 0.55) 80%,
-    rgba(250, 248, 245, 0.95) 88%,
-    var(--bg) 94%,
+    rgba(250, 248, 245, 0) 0px,
+    rgba(250, 248, 245, 0) 470px,
+    rgba(250, 248, 245, 0.55) 530px,
+    rgba(250, 248, 245, 0.92) 580px,
+    var(--bg) 640px,
     var(--bg) 100%);
   pointer-events: none;
   z-index: 1;
