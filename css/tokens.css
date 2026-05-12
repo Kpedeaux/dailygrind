@@ -1,0 +1,62 @@
+/* ==========================================================================
+ * tokens.css — CR brand design tokens
+ *
+ * Shared visual language across the Daily Grind. Same palette and type
+ * scale as the rest of CR Coffee Shop's web properties.
+ * ========================================================================== */
+
+:root {
+  /* ----- Palette ----- */
+  --cr-cream:           #F4ECDF;   /* paper background */
+  --cr-cream-dark:      #EBE0CC;   /* surface, hover */
+  --cr-ink:             #1D1D1D;   /* primary text */
+  --cr-charcoal-2:      #4A4A4A;   /* secondary text */
+  --cr-hairline:        rgba(29, 29, 29, 0.18);
+  --cr-red:             #A52639;   /* Million Dollar Red */
+  --cr-red-dark:        #7E1E2A;
+  --cr-red-light:       #C1485A;
+
+  /* ----- Tile colors (Wordle palette tuned to CR cream background) ----- */
+  --tile-empty-bg:      transparent;
+  --tile-empty-border:  rgba(29, 29, 29, 0.28);
+  --tile-typed-border:  rgba(29, 29, 29, 0.55);
+  --tile-correct:       #6E9B59;   /* warm muted green */
+  --tile-present:       #D4A53B;   /* warm muted gold */
+  --tile-absent:        #7A7268;   /* dusty taupe */
+  --tile-text:          var(--cr-ink);
+  --tile-text-revealed: #FAF6EE;
+
+  /* ----- Type families ----- */
+  --font-display: 'Fredoka', 'Cooper Black', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ----- Type scale ----- */
+  --text-xs:    11px;
+  --text-sm:    13px;
+  --text-base:  15px;
+  --text-md:    18px;
+  --text-lg:    22px;
+  --text-xl:    28px;
+  --text-2xl:   36px;
+
+  /* ----- Spacing ----- */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   36px;
+
+  /* ----- Board geometry ----- */
+  /* Tile size derived from viewport; capped so the board doesn't get silly on big screens.
+     5 tiles wide with 4 gaps = 5T + 4G. Total side margin = 32px (16 each side).
+     viewport-width = 5T + 4G + 32  →  T = (vw - 32 - 4G) / 5 */
+  --tile-gap:        6px;
+  --side-pad-min:    16px;
+  --tile-size:       min(calc((100vw - 2 * var(--side-pad-min) - 4 * var(--tile-gap)) / 5), 64px);
+  --board-width:     calc(5 * var(--tile-size) + 4 * var(--tile-gap));
+
+  /* ----- Key geometry ----- */
+  --key-height:      52px;
+  --key-gap:         6px;
+}
