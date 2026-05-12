@@ -62,36 +62,31 @@ body {
 .app-header__brand {
   display: flex;
   align-items: center;
-  gap: 14px;
   text-decoration: none;
   color: var(--fg-strong);
-}
-
-.app-header__mark {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-style: italic;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--fg-strong);
-  letter-spacing: 0.02em;
-}
-
-.app-header__divider {
-  width: 1px;
-  height: 20px;
-  background: var(--border-strong);
-  display: block;
   flex-shrink: 0;
 }
 
-.app-header__title {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: -0.005em;
-  color: var(--fg-strong);
+.app-header__logo {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-height: 44px;
+  user-select: none;
+}
+
+/* ----- Masthead — "The Daily Grind" in the brand cafe-sign feel.
+   Sancreek is the closest Google Font to Cafe Brewery's hand-drawn
+   vintage-sign character (thin pen strokes, irregular outlines). ----- */
+.masthead {
+  margin: 0 var(--space-md) var(--space-sm);
+  text-align: center;
+  font-family: 'Sancreek', 'Cafe Brewery', 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 1.8rem + 3vw, 3.5rem);
+  letter-spacing: 0.01em;
   line-height: 1;
+  color: var(--fg-strong);
 }
 
 .app-header__actions {
@@ -129,10 +124,10 @@ body {
   text-align: center;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--fg-muted);
-  margin: var(--space-lg) 0 var(--space-xs);
+  margin: var(--space-md) 0 4px;
 }
 
 /* ==========================================================================
