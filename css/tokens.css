@@ -1,56 +1,85 @@
 /* ==========================================================================
- * tokens.css — CR brand design tokens
+ * tokens.css — CR Coffee Shop design tokens
  *
- * Shared visual language across the Daily Grind. Same palette and type
- * scale as the rest of CR Coffee Shop's web properties.
+ * Lifted from the CR Coffee Design System. Same palette, same type scale,
+ * same hairline-and-cream visual language as the rest of crcoffeenola.com.
+ *
+ * "Serving Antique Roasted Coffee. New Orleans since 2015."
  * ========================================================================== */
 
-:root {
-  /* ----- Palette ----- */
-  --cr-cream:           #F4ECDF;   /* paper background */
-  --cr-cream-dark:      #EBE0CC;   /* surface, hover */
-  --cr-ink:             #1D1D1D;   /* primary text */
-  --cr-charcoal-2:      #4A4A4A;   /* secondary text */
-  --cr-hairline:        rgba(29, 29, 29, 0.18);
-  --cr-red:             #A52639;   /* Million Dollar Red */
-  --cr-red-dark:        #7E1E2A;
-  --cr-red-light:       #C1485A;
+/* Cafe Brewery (the hand-drawn CR display face) is intentionally NOT loaded
+ * — it's personal-use-only per Brittney Murphy Design's license, and CR's
+ * production sites use the wordmark as a PNG/JPG image (assets/img/cr-*.jpg)
+ * to avoid the licensing issue. Headlines here use Playfair Display, which
+ * carries the editorial Southern voice without the licensing problem. */
 
-  /* ----- Tile colors (Wordle palette tuned to CR cream background) ----- */
-  --tile-empty-bg:      transparent;
-  --tile-empty-border:  rgba(29, 29, 29, 0.28);
-  --tile-typed-border:  rgba(29, 29, 29, 0.55);
-  --tile-correct:       #6E9B59;   /* warm muted green */
-  --tile-present:       #D4A53B;   /* warm muted gold */
-  --tile-absent:        #7A7268;   /* dusty taupe */
-  --tile-text:          var(--cr-ink);
-  --tile-text-revealed: #FAF6EE;
+:root {
+  /* ----- Color: raw palette ----- */
+  --cr-red:                #A52639;   /* Million Dollar Red — paint on the door */
+  --cr-red-hover:          #8A1E2F;
+  --cr-cream:              #FAF8F5;   /* page background — warm off-white */
+  --cr-cream-dark:         #F0EDE8;   /* inset panels */
+  --cr-parchment:          #EFE7D8;
+  --cr-charcoal:           #2A2A2A;   /* body type */
+  --cr-charcoal-light:     #555555;
+  --cr-ink:                #171717;
+  --cr-hairline:           rgba(42, 42, 42, 0.12);
+  --cr-hairline-dark:      rgba(42, 42, 42, 0.25);
+
+  /* ----- Color: semantic aliases ----- */
+  --bg:                    var(--cr-cream);
+  --bg-panel:              var(--cr-cream-dark);
+  --fg:                    var(--cr-charcoal);
+  --fg-muted:              var(--cr-charcoal-light);
+  --fg-strong:             var(--cr-ink);
+  --fg-inverse:            var(--cr-cream);
+  --accent:                var(--cr-red);
+  --accent-hover:          var(--cr-red-hover);
+  --border:                var(--cr-hairline);
+  --border-strong:         var(--cr-hairline-dark);
+
+  /* ----- Tile colors (game-specific, tuned to the cream ground) ----- */
+  --tile-empty-border:     var(--cr-hairline-dark);
+  --tile-typed-border:     var(--cr-charcoal);
+  --tile-correct:          #6E8C56;   /* muted herbarium green */
+  --tile-present:          #C49A3A;   /* muted gold */
+  --tile-absent:           #5C5751;   /* dusty taupe */
+  --tile-text-revealed:    #FAF8F5;
 
   /* ----- Type families ----- */
-  --font-display: 'Fredoka', 'Cooper Black', 'Helvetica Neue', Arial, sans-serif;
-  --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --font-display:          'Cafe Brewery', 'Playfair Display', Georgia, serif;
+  --font-serif:            'Playfair Display', 'Hoefler Text', Georgia, serif;
+  --font-sans:             'Inter', -apple-system, 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono:             'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  /* ----- Type scale ----- */
-  --text-xs:    11px;
-  --text-sm:    13px;
-  --text-base:  15px;
-  --text-md:    18px;
-  --text-lg:    22px;
-  --text-xl:    28px;
-  --text-2xl:   36px;
+  /* ----- Fluid type scale ----- */
+  --text-xs:   clamp(0.6875rem, 0.6rem + 0.2vw,  0.75rem);
+  --text-sm:   clamp(0.75rem,   0.7rem + 0.25vw, 0.875rem);
+  --text-base: clamp(0.9375rem, 0.875rem + 0.25vw, 1.0625rem);
+  --text-lg:   clamp(1.0625rem, 1rem + 0.3vw,    1.1875rem);
+  --text-xl:   clamp(1.25rem,   1.1rem + 0.5vw,  1.5rem);
+  --text-2xl:  clamp(1.5rem,    1.2rem + 1vw,    2rem);
+  --text-3xl:  clamp(2rem,      1.5rem + 1.5vw,  2.75rem);
+  --text-4xl:  clamp(2.5rem,    1.8rem + 2.5vw,  3.75rem);
 
   /* ----- Spacing ----- */
-  --space-xs:   4px;
-  --space-sm:   8px;
-  --space-md:   16px;
-  --space-lg:   24px;
-  --space-xl:   36px;
+  --space-xs:    0.5rem;
+  --space-sm:    1rem;
+  --space-md:    1.5rem;
+  --space-lg:    2rem;
+  --space-xl:    3rem;
+  --space-2xl:   4rem;
 
-  /* ----- Board geometry ----- */
-  /* Tile size derived from viewport; capped so the board doesn't get silly on big screens.
-     5 tiles wide with 4 gaps = 5T + 4G. Total side margin = 32px (16 each side).
-     viewport-width = 5T + 4G + 32  →  T = (vw - 32 - 4G) / 5 */
+  /* ----- Layout & effects ----- */
+  --container-max:     1200px;
+  --container-narrow:  800px;
+  --header-height:     60px;
+  --radius-0:          0;
+  --radius-sm:         2px;
+  --shadow-none:       none;
+  --transition-base:   200ms ease;
+
+  /* ----- Board geometry — square tiles sized to fit the viewport ----- */
   --tile-gap:        6px;
   --side-pad-min:    16px;
   --tile-size:       min(calc((100vw - 2 * var(--side-pad-min) - 4 * var(--tile-gap)) / 5), 64px);

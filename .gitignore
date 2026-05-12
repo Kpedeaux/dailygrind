@@ -1,0 +1,16 @@
+# Design system reference materials — kept in the project folder for local
+# work but never deployed. The site uses the assets/img/cr-*.jpg files
+# (copied out of the design system) and Google-hosted fonts only.
+CR Coffee Design System/
+
+# Cafe Brewery font — personal-use license only, not for production.
+# We use Playfair Display instead. If we ever license Cafe Brewery, copy
+# the .ttf files into assets/fonts/ and re-add the @font-face rules.
+assets/fonts/
+
+# Cloudflare wrangler local cache (contains auth tokens)
+.wrangler/
+
+# OS junk
+.DS_Store
+Thumbs.db
