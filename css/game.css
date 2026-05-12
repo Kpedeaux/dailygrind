@@ -21,18 +21,6 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-/* The fireplace at the Magazine Street shop. Fixed background so it
- * stays put while content scrolls. The board renders directly over the
- * cavity area; the header/keyboard/footer get cream backdrops so the
- * photo is visible only as a frame around the playing area. */
-body {
-  background-image: url('../assets/img/fireplace.jpg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center top;
-}
-
 ::selection { background: var(--cr-red); color: #fff; }
 
 body {
@@ -56,29 +44,54 @@ body {
  * Header — sticky, hairline-divided, monogram + serif title
  * ========================================================================== */
 
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
-  min-height: var(--header-height);
-  background: transparent;
-  border-bottom: 0;
+/* ==========================================================================
+ * Hero banner — the CR Coffee fireplace photo as a contained header.
+ * Photo aspect (1200×650) determines banner height so the CR sign always
+ * displays in full with no cropping. Title + icons overlay in white at
+ * the top, with a soft black gradient for readability.
+ * ========================================================================== */
+.banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 793;
+  max-height: 38vh;
+  background-image: url('../assets/img/fireplace.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-color: var(--cr-ink);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
-.app-header__title {
+.banner__row {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%);
+}
+
+.banner__title {
   margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(1.75rem, 1.4rem + 2vw, 2.5rem);
+  font-size: clamp(1.625rem, 1.2rem + 2vw, 2.25rem);
   letter-spacing: -0.01em;
   line-height: 1;
   color: #fff;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.banner__actions {
+  display: flex;
+  gap: var(--space-xs);
 }
 
 /* ==========================================================================
@@ -101,8 +114,8 @@ body {
 .icon-btn {
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.22);
   color: #fff;
   font-family: var(--font-sans);
   font-size: 18px;
@@ -113,11 +126,13 @@ body {
   justify-content: center;
   border-radius: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   transition: background-color var(--transition-base), border-color var(--transition-base);
 }
 .icon-btn:hover,
 .icon-btn:focus-visible {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   border-color: #fff;
   outline: none;
 }
@@ -147,24 +162,17 @@ body {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Photo math (re-crop has C top at 8.3% of photo, R bottom at 50.9%):
- *   Phone (portrait, full-photo cover-fit): R bottom = 51vh
- *   Desktop (landscape, photo overflows vertically): R bottom = 73vh
- * Board top padding pushes the board right under R bottom on each. */
+/* Below the banner: clean cream surface. Board sits centered with normal
+ * spacing — no more fighting the photo's positioning. */
 .board-wrap {
-  flex: 0 0 auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 44vh var(--side-pad-min) var(--space-md);
+  justify-content: center;
+  padding: var(--space-md) var(--side-pad-min);
   position: relative;
-}
-
-@media (orientation: landscape), (min-width: 720px) {
-  .board-wrap {
-    padding-top: 67vh;
-  }
+  background: var(--bg);
 }
 
 .board {
@@ -186,18 +194,16 @@ body {
   font-size: calc(var(--tile-size) * 0.48);
   text-transform: uppercase;
   letter-spacing: 0;
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  background: rgba(20, 16, 14, 0.55);
-  color: #fff;
+  border: 2px solid var(--tile-empty-border);
+  background: transparent;
+  color: var(--fg-strong);
   user-select: none;
   border-radius: 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   transition: transform 80ms ease, border-color var(--transition-base), background-color var(--transition-base);
 }
 .tile.is-typed {
-  border-color: #fff;
-  background: rgba(20, 16, 14, 0.75);
+  border-color: var(--fg-strong);
+  background: transparent;
   animation: tile-pop 120ms ease;
 }
 .tile.is-correct {
@@ -291,10 +297,7 @@ body {
   flex-direction: column;
   gap: var(--key-gap);
   align-items: center;
-  background: rgba(250, 248, 245, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border);
+  background: var(--bg);
 }
 .keyboard__row {
   display: flex;
@@ -356,9 +359,7 @@ body {
 .app-footer {
   padding: var(--space-md) var(--space-md) var(--space-lg);
   text-align: center;
-  background: rgba(250, 248, 245, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg);
   border-top: 1px solid var(--border);
 }
 .footer-cta {
