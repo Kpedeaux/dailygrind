@@ -49,12 +49,12 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  aspect-ratio: 1200 / 1468;
+  aspect-ratio: 1200 / 1507;
   background: linear-gradient(180deg,
     rgba(250, 248, 245, 0) 0%,
-    rgba(250, 248, 245, 0) 47%,
-    rgba(250, 248, 245, 0.40) 56%,
-    rgba(250, 248, 245, 0.85) 70%,
+    rgba(250, 248, 245, 0) 46%,
+    rgba(250, 248, 245, 0.45) 55%,
+    rgba(250, 248, 245, 0.88) 70%,
     var(--bg) 84%);
   pointer-events: none;
   z-index: 1;
@@ -177,17 +177,18 @@ body::after {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Photo height = body_width * 1.223 (photo aspect 1200×1468).
- * R bottom = photo height * 0.514 = body_width * 0.629.
- * Board top should sit right at R bottom, accounting for the header.
- * Using % of containing block width keeps it consistent across devices. */
+/* Photo height = body_width * 1.256 (photo aspect 1200×1507).
+ * Mantel items at 48.7% of photo = body_width * 0.612.
+ * Board top should sit right where the boxes/kettle on the mantel start
+ * (where the user drew the dashed line) — above the wooden mantel front
+ * but below the R bottom of CR. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: calc(62.9% - 64px) var(--side-pad-min) var(--space-md);
+  padding: calc(61.2% - 64px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
