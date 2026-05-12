@@ -147,19 +147,23 @@ body {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
+/* Photo math (re-crop has C top at 8.3% of photo, R bottom at 50.9%):
+ *   Phone (portrait, full-photo cover-fit): R bottom = 51vh
+ *   Desktop (landscape, photo overflows vertically): R bottom = 73vh
+ * Board top padding pushes the board right under R bottom on each. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 33vh var(--side-pad-min) var(--space-md);
+  padding: 44vh var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
 @media (orientation: landscape), (min-width: 720px) {
   .board-wrap {
-    padding-top: 56vh;
+    padding-top: 67vh;
   }
 }
 
