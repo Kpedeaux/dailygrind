@@ -12,13 +12,25 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.7;
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
+}
+
+/* The fireplace at the Magazine Street shop. Fixed background so it
+ * stays put while content scrolls. The board renders directly over the
+ * cavity area; the header/keyboard/footer get cream backdrops so the
+ * photo is visible only as a frame around the playing area. */
+body {
+  background-image: url('../assets/img/fireplace.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center top;
 }
 
 ::selection { background: var(--cr-red); color: #fff; }
@@ -71,11 +83,15 @@ body {
 
 .masthead {
   text-align: center;
-  padding: var(--space-lg) var(--space-md) 0;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-sm);
+  background: rgba(250, 248, 245, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .masthead__logo-link {
@@ -280,6 +296,10 @@ body {
   flex-direction: column;
   gap: var(--key-gap);
   align-items: center;
+  background: rgba(250, 248, 245, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
 }
 .keyboard__row {
   display: flex;
@@ -341,6 +361,9 @@ body {
 .app-footer {
   padding: var(--space-md) var(--space-md) var(--space-lg);
   text-align: center;
+  background: rgba(250, 248, 245, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
 }
 .footer-cta {
