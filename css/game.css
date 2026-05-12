@@ -30,6 +30,9 @@ body {
   justify-content: center;
 }
 
+/* The full fireplace photo lives behind the page content, with a cream
+ * gradient fading it from R bottom downward so the board sits on a
+ * washed-out version of the cavity instead of the full-saturation image. */
 #app {
   width: 100%;
   max-width: 520px;
@@ -38,46 +41,40 @@ body {
   display: flex;
   flex-direction: column;
   padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  background-image:
+    linear-gradient(180deg,
+      rgba(250, 248, 245, 0) 0%,
+      rgba(250, 248, 245, 0) 42%,
+      rgba(250, 248, 245, 0.45) 55%,
+      rgba(250, 248, 245, 0.85) 70%,
+      var(--bg) 85%),
+    url('../assets/img/fireplace.jpg');
+  background-size: 100% auto, 100% auto;
+  background-position: center top, center top;
+  background-repeat: no-repeat, no-repeat;
+  background-color: var(--bg);
 }
 
 /* ==========================================================================
  * Header — sticky, hairline-divided, monogram + serif title
  * ========================================================================== */
 
-/* ==========================================================================
- * Hero banner — the CR Coffee fireplace photo as a contained header.
- * Photo aspect (1200×650) determines banner height so the CR sign always
- * displays in full with no cropping. Title + icons overlay in white at
- * the top, with a soft black gradient for readability.
- * ========================================================================== */
-.banner {
+/* Sticky header — Daily Grind title on the left, action icons on the
+ * right. Both overlay the CR sign area of the photo in white. */
+.app-header {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1200 / 793;
-  max-height: 38vh;
-  background-image: url('../assets/img/fireplace.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-color: var(--cr-ink);
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-}
-
-.banner__row {
-  position: absolute;
-  inset: 0 0 auto 0;
+  z-index: 5;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
+  padding: var(--space-md) var(--space-md) var(--space-sm);
   background: linear-gradient(180deg,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.2) 70%,
     rgba(0, 0, 0, 0) 100%);
 }
 
-.banner__title {
+.app-header__title {
   margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
@@ -89,7 +86,7 @@ body {
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-.banner__actions {
+.app-header__actions {
   display: flex;
   gap: var(--space-xs);
 }
@@ -162,17 +159,18 @@ body {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Below the banner: clean cream surface. Board sits centered with normal
- * spacing — no more fighting the photo's positioning. */
+/* Board lands where the R of CR ends in the photo, sitting visually
+ * inside the wooden cavity. The photo is positioned via the #app
+ * background (100% width, natural aspect), so R bottom is at ~52% of
+ * #app width. Padding-top targets that minus the header height. */
 .board-wrap {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-md) var(--side-pad-min);
+  justify-content: flex-start;
+  padding: calc(52% - 56px) var(--side-pad-min) var(--space-md);
   position: relative;
-  background: var(--bg);
 }
 
 .board {
