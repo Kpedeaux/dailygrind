@@ -63,8 +63,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-md);
-  height: var(--header-height);
+  padding: var(--space-sm) var(--space-md);
+  min-height: var(--header-height);
   background: transparent;
   border-bottom: 0;
 }
@@ -74,11 +74,11 @@ body {
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
-  letter-spacing: -0.005em;
+  font-size: clamp(1.75rem, 1.4rem + 2vw, 2.5rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   color: #fff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* ==========================================================================
@@ -141,17 +141,26 @@ body {
  * Board
  * ========================================================================== */
 
-/* The board sits in the cement cavity of the fireplace photo. The
- * padding-top pushes it down past the CR sign + wooden mantel so the
- * board's top edge lands right where the cavity opening begins. */
+/* The board starts right below the R of the CR sign in the fireplace
+ * photo. Photo positioning under background-size: cover differs by
+ * viewport aspect: on portrait phones the photo fits height-exactly so
+ * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
+ * so CR ends at ~58vh. We use a media query to put the board in the
+ * right spot for each case. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: clamp(180px, 38vh, 320px) var(--side-pad-min) var(--space-md);
+  padding: 33vh var(--side-pad-min) var(--space-md);
   position: relative;
+}
+
+@media (orientation: landscape), (min-width: 720px) {
+  .board-wrap {
+    padding-top: 56vh;
+  }
 }
 
 .board {
