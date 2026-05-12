@@ -30,7 +30,7 @@ html, body {
  * tiles "emerge" from the washed-out lower portion of the photo. */
 body {
   position: relative;
-  max-width: 720px;
+  max-width: 820px;
   margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
@@ -49,16 +49,15 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  /* Make the overlay taller than the photo (1200×1507 = 1.256 ratio)
-   * so the fully-cream tail extends below the photo bottom, preventing
-   * any photo strip from peeking through at the seam. */
-  aspect-ratio: 1200 / 1700;
+  /* Match photo aspect (1200×793) plus a cream-extension tail so the
+   * gradient continues hiding any seam where the photo ends. */
+  aspect-ratio: 1200 / 950;
   background: linear-gradient(180deg,
     rgba(250, 248, 245, 0) 0%,
-    rgba(250, 248, 245, 0) 40%,
-    rgba(250, 248, 245, 0.5) 50%,
-    rgba(250, 248, 245, 0.92) 62%,
-    var(--bg) 72%,
+    rgba(250, 248, 245, 0) 70%,
+    rgba(250, 248, 245, 0.55) 80%,
+    rgba(250, 248, 245, 0.95) 88%,
+    var(--bg) 94%,
     var(--bg) 100%);
   pointer-events: none;
   z-index: 1;
@@ -181,18 +180,16 @@ body::after {
  * CR ends at ~39vh; on landscape/desktop the photo overflows vertically
  * so CR ends at ~58vh. We use a media query to put the board in the
  * right spot for each case. */
-/* Photo height = body_width * 1.256 (photo aspect 1200×1507).
- * Mantel items at 48.7% of photo = body_width * 0.612.
- * Board top should sit right where the boxes/kettle on the mantel start
- * (where the user drew the dashed line) — above the wooden mantel front
- * but below the R bottom of CR. */
+/* Photo crop is now CR-only (1200×793). R bottom sits at 92.5% of photo.
+ * Photo height = body_width * 0.661, so R bottom = body_width * 0.612.
+ * Board top is pulled up right below R with a small breathing gap. */
 .board-wrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: calc(61.2% - 64px) var(--side-pad-min) var(--space-md);
+  padding: calc(63% - 60px) var(--side-pad-min) var(--space-md);
   position: relative;
 }
 
