@@ -35,3 +35,11 @@ CREATE TABLE IF NOT EXISTS day_plays (
 
 CREATE INDEX IF NOT EXISTS idx_day_plays_day_ip
   ON day_plays(day, ip_hash);
+
+-- Server-backed streak protection (see functions/api/player.js and the
+-- migrations/0002_players.sql migration). Anonymous cookie id → stats backup.
+CREATE TABLE IF NOT EXISTS players (
+  pid         TEXT PRIMARY KEY,
+  stats_json  TEXT NOT NULL,
+  updated_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

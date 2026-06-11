@@ -115,3 +115,11 @@ export function setSettings(patch) {
 export const HAS_PLAYED_KEY = 'hasPlayed';
 export function getHasPlayed() { return !!load(HAS_PLAYED_KEY, false); }
 export function setHasPlayed() { save(HAS_PLAYED_KEY, true); }
+
+/* ----- Storage health -----
+ * In private browsing / lockdown configurations localStorage throws on
+ * write, which means streaks silently can't be saved. Surface that so
+ * the player isn't blindsided tomorrow. */
+export function storageHealthy() {
+  return save('health', Date.now());
+}

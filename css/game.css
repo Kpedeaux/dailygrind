@@ -654,6 +654,36 @@ body::after {
   border-color: var(--fg-strong);
 }
 
+/* One-tap platform share chips (X / Facebook / Threads / WhatsApp / SMS).
+ * Square corners and hairlines to match the rest of the kit. */
+.share-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.share-chip {
+  padding: 9px 14px;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--transition-base), border-color var(--transition-base);
+}
+.share-chip:hover,
+.share-chip:focus-visible {
+  color: var(--cr-red);
+  border-color: var(--cr-red);
+  outline: none;
+}
+
 /* ==========================================================================
  * Settings rows
  * ========================================================================== */

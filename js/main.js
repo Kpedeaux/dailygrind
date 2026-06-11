@@ -22,7 +22,9 @@ import { attachKeyboard } from './input.js';
 import {
   loadGame, saveGame, getStats, recordResult,
   getSettings, setSettings, getHasPlayed, setHasPlayed,
+  storageHealthy,
 } from './storage.js';
+import { syncStatsWithServer, pushStatsToServer } from './sync.js';
 import { showHowTo, showStats, showSettings } from './overlays.js';
 import {
   getTodaysWord, getDayIndex, msUntilNextPuzzle, VALID_WORDS,
@@ -120,6 +122,28 @@ window.addEventListener('DOMContentLoaded', async () => {
   });
   if (isFirstVisit) trackFirstVisit();
 
+  // ----- Streak protection -----
+  // 1. Ask the browser to exempt our storage from eviction (Chrome and
+  //    Firefox honor this; Safari ignores it, which is what the server
+  //    backup below is for).
+  requestPersistentStorage();
+  // 2. Pull the server-backed copy of stats and merge it in. Restores
+  //    streaks after localStorage gets wiped (Safari's 7-day purge,
+  //    cleared history). Fire-and-forget — never blocks boot.
+  syncStatsWithServer();
+  // 3. Watch for the day rolling over while the page is open. Phones
+  //    keep tabs alive for days; without this, a "yesterday" tab eats
+  //    streaks by recording wins under the wrong puzzle number.
+  startRolloverWatch();
+  // 4. If storage is blocked (private mode), warn — streaks can't stick.
+  if (!storageHealthy()) {
+    setTimeout(() => showToast(
+      els.toast(),
+      'Private mode? Progress can’t be saved — streaks won’t stick.',
+      4000,
+    ), 1200);
+  }
+
   // Boot routing
   if (isFirstVisit) {
     setHasPlayed();
@@ -132,6 +156,61 @@ window.addEventListener('DOMContentLoaded', async () => {
     trackPuzzleStart(game.day);
   }
 });
+
+/* ---------- Streak protection helpers ---------- */
+
+async function requestPersistentStorage() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      const already = await navigator.storage.persisted();
+      if (!already) await navigator.storage.persist();
+    }
+  } catch { /* unsupported — fine */ }
+}
+
+/** True when it's safe to swap to the new day's puzzle underneath the
+ *  player: nothing typed, no animation, no overlay open. */
+function safeToReload() {
+  return game.pending.length === 0
+    && !game.busy
+    && document.getElementById('overlay').hidden
+    && (game.finished || game.guesses.length === 0);
+}
+
+let rolloverToastShown = false;
+
+function checkDayRollover() {
+  let nowDay;
+  try { nowDay = getDayIndex(); } catch { return; }
+  if (nowDay === game.day) return;
+
+  // A new puzzle dropped while this page was open.
+  if (safeToReload()) {
+    location.reload();
+    return;
+  }
+  if (!game.finished && (game.guesses.length > 0 || game.pending.length > 0)) {
+    // Mid-puzzle: let them finish — the result still counts for the day
+    // the puzzle belongs to, so their streak stays intact. The next
+    // safe moment (overlay closed after finishing), we reload.
+    if (!rolloverToastShown) {
+      rolloverToastShown = true;
+      showToast(els.toast(), 'A new puzzle is ready — finish this one first!', 3000);
+    }
+  }
+  // Overlay open (stats/share in progress): do nothing. The countdown
+  // in the stats overlay shows its own "play today's puzzle" button,
+  // and the watcher below retries once the overlay closes.
+}
+
+function startRolloverWatch() {
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) checkDayRollover();
+  });
+  window.addEventListener('focus', checkDayRollover);
+  window.addEventListener('pageshow', checkDayRollover);  // bfcache restores
+  setInterval(checkDayRollover, 60 * 1000);
+}
 
 /* ---------- Settings ---------- */
 
@@ -286,6 +365,9 @@ async function finishGame(outcome) {
   else trackLoss(game.day, game.answer, game.hardMode);
 
   submitGlobalResult(outcome === 'win', guessCount);
+  // Back up the freshly-updated streak server-side (survives localStorage
+  // eviction). Best-effort, fire and forget.
+  pushStatsToServer(updatedStats);
 
   // Brief pause so the player sees the final row, then open stats
   if (outcome === 'lose') {

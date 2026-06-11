@@ -42,6 +42,59 @@ Save, then redeploy (push any commit) so the binding takes effect.
 Hit `https://dailygrind.crcoffeenola.com/api/stats` — you should see
 `{"today":{"plays":0,"wins":0,"distribution":[0,0,0,0,0,0]}}` (200 OK).
 
+## Streak protection (one-time migration)
+
+Streaks used to live only in localStorage, which iOS Safari purges after
+~7 days without a visit (and "Clear History" kills instantly). Three
+layers now protect them:
+
+1. **Day-rollover detection** — the app re-checks the puzzle day on
+   focus/visibility/every minute, so a tab left open overnight can no
+   longer record a win under yesterday's puzzle number (the bug that ate
+   streaks for players who never closed the tab).
+2. **`navigator.storage.persist()`** — Chrome/Firefox exempt our storage
+   from eviction.
+3. **Server-side backup** — `/api/player` keeps a copy of each player's
+   stats in D1, keyed by an anonymous UUID in a server-set HttpOnly
+   cookie. HTTP-set cookies survive Safari's script-storage purge, so
+   the game silently restores streaks after localStorage is wiped.
+   No name/email/IP — just a random id and a stats blob.
+
+Apply the migration once (same pattern as the original schema):
+
+```bash
+npx wrangler d1 execute dailygrind --remote --file=migrations/0002_players.sql
+```
+
+Until the table exists, `/api/player` returns 503 and the game behaves
+exactly as before (local-only stats). Verify after deploy:
+`https://dailygrind.crcoffeenola.com/api/player` should return
+`{"stats":null}` (200) on a fresh device.
+
+Known limit: clearing **cookies** AND site data nukes both copies — only
+real accounts would survive that, which is overkill for a word game.
+
+## Sharing
+
+The stats overlay now has a full share kit aimed at spreading the game
+(and CR's name) on social:
+
+- **Share Result** — native share sheet on mobile, clipboard on desktop.
+- **Share Image** — a 1080×1080 CR-branded result card (canvas-drawn:
+  cream ground, Million Dollar Red rules, the player's tile grid, streak,
+  game URL) handed to the share sheet as a PNG. This is the only viable
+  path onto **Instagram**, which has no web share intent. Desktop falls
+  back to downloading the PNG.
+- **One-tap platform chips** — X and Threads (pre-filled post via their
+  official web intents), Facebook (sharer; FB forbids pre-filled text, so
+  the grid is auto-copied for pasting), WhatsApp (`wa.me`), and SMS.
+- Share text now includes a `🔥 N-day streak` line at 2+ — streaks are
+  the most shareable flex there is.
+
+Every share method fires a distinct GA4 `puzzle_share` event (`method`
+param: native / clipboard / image_native / image_download / x / facebook /
+threads / whatsapp / sms), so you can see which channels actually spread.
+
 ## Quick start (local)
 
 ```bash
@@ -77,15 +130,20 @@ daily-grind/
 │   ├── words.js            Daily-word selection + word lists.
 │   ├── render.js           DOM rendering for board + keyboard.
 │   ├── input.js            Physical + on-screen keyboard input.
-│   ├── share.js            Spoiler-free emoji grid generator.
+│   ├── share.js            Spoiler-free emoji grid + platform share URLs.
+│   ├── sharecard.js        Canvas-drawn branded result image (the IG path).
 │   ├── storage.js          localStorage wrappers + stats.
+│   ├── sync.js             Server-backed streak protection client.
 │   └── analytics.js        GA4 event helpers.
 ├── /assets
 │   └── /img                CR logos.
 ├── /functions
 │   └── /api
-│       └── stats.js        D1-backed aggregate stats endpoint.
-└── schema.sql              D1 table definitions.
+│       ├── stats.js        D1-backed aggregate stats endpoint.
+│       └── player.js       D1-backed per-player streak backup.
+├── /migrations
+│   └── 0002_players.sql    One-time D1 migration for streak backup.
+└── schema.sql              D1 table definitions (full, for fresh installs).
 ```
 
 ### Why no build step

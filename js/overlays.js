@@ -6,7 +6,11 @@
  * ========================================================================== */
 
 import { RESULT } from './game.js';
-import { buildShareText, copyToClipboard, nativeShare } from './share.js';
+import {
+  buildShareText, copyToClipboard, nativeShare,
+  xShareUrl, threadsShareUrl, facebookShareUrl, whatsappShareUrl, smsShareUrl,
+} from './share.js';
+import { buildShareCardBlob, shareCardImage } from './sharecard.js';
 import { trackShare, trackVisitCRClick } from './analytics.js';
 
 const overlayEl = () => document.getElementById('overlay');
@@ -203,12 +207,20 @@ export function showStats({
       `;
       inner.appendChild(countdown);
 
-      // Live-update the countdown every second
+      // Live-update the countdown every second. When it hits zero, swap
+      // in a "play now" button — never strand the player on a stale page
+      // (that's how streaks die).
       const timeEl = countdown.querySelector('[data-countdown]');
       let remaining = msUntilNext;
       function tickCountdown() {
         if (remaining <= 0) {
-          timeEl.textContent = 'Reload for new puzzle';
+          countdown.innerHTML = '';
+          const playBtn = document.createElement('button');
+          playBtn.className = 'btn';
+          playBtn.type = 'button';
+          playBtn.textContent = 'Play today’s puzzle →';
+          playBtn.addEventListener('click', () => location.reload());
+          countdown.appendChild(playBtn);
           return;
         }
         const h = Math.floor(remaining / 3600000);
@@ -223,22 +235,36 @@ export function showStats({
         tickCountdown();
       }, 1000);
 
-      // Share button
+      /* ----- Share section ----- */
+      const won = finishedToday === 'win';
+      const guesses = rows ? rows.length : 0;
+      const streak = stats.currentStreak || 0;
+      const shareText = buildShareText({ rows, won, day, hardMode, streak });
+
+      // Pre-render the branded image card while the player reads their
+      // stats, so the share click stays inside iOS's user-gesture window.
+      const cardPromise = buildShareCardBlob({ rows, won, day, hardMode, streak })
+        .catch(() => null);
+
+      const shareHeader = document.createElement('p');
+      shareHeader.className = 'overlay__eyebrow';
+      shareHeader.textContent = 'Share Your Grind';
+      inner.appendChild(shareHeader);
+
+      // Primary row: native share + image card
       const btnRow = document.createElement('div');
       btnRow.className = 'btn-row';
+
       const shareBtn = document.createElement('button');
       shareBtn.className = 'btn';
       shareBtn.type = 'button';
       shareBtn.textContent = 'Share Result';
       shareBtn.addEventListener('click', async () => {
-        const won = finishedToday === 'win';
-        const guesses = rows ? rows.length : 0;
-        const text = buildShareText({ rows, won, day, hardMode });
-        const shared = await nativeShare(text);
+        const shared = await nativeShare(shareText);
         if (shared) {
           trackShare(day, 'native', won, guesses);
         } else {
-          const copied = await copyToClipboard(text);
+          const copied = await copyToClipboard(shareText);
           if (copied) {
             shareBtn.textContent = 'Copied!';
             trackShare(day, 'clipboard', won, guesses);
@@ -251,7 +277,85 @@ export function showStats({
       });
       btnRow.appendChild(shareBtn);
 
+      const imageBtn = document.createElement('button');
+      imageBtn.className = 'btn';
+      imageBtn.type = 'button';
+      imageBtn.textContent = 'Share Image';
+      imageBtn.addEventListener('click', async () => {
+        imageBtn.disabled = true;
+        const blob = await cardPromise;
+        if (!blob) {
+          imageBtn.textContent = 'Image failed';
+          setTimeout(() => { imageBtn.textContent = 'Share Image'; imageBtn.disabled = false; }, 1800);
+          return;
+        }
+        const result = await shareCardImage(blob, day);
+        imageBtn.disabled = false;
+        if (result === 'shared') {
+          trackShare(day, 'image_native', won, guesses);
+        } else if (result === 'downloaded') {
+          trackShare(day, 'image_download', won, guesses);
+          imageBtn.textContent = 'Saved! Post it ☕';
+          setTimeout(() => { imageBtn.textContent = 'Share Image'; }, 2400);
+        } else if (result === 'failed') {
+          imageBtn.textContent = 'Share failed';
+          setTimeout(() => { imageBtn.textContent = 'Share Image'; }, 1800);
+        }
+        // 'cancelled' → player closed the sheet; no feedback needed
+      });
+      btnRow.appendChild(imageBtn);
+      inner.appendChild(btnRow);
+
+      // One-tap platform chips
+      const chips = document.createElement('div');
+      chips.className = 'share-chips';
+      const platforms = [
+        {
+          label: 'X', method: 'x',
+          go: () => window.open(xShareUrl(shareText), '_blank', 'noopener'),
+        },
+        {
+          label: 'Facebook', method: 'facebook',
+          // FB can't pre-fill text — copy the grid first so it can be
+          // pasted into the post, then open the sharer with the game URL.
+          go: async chip => {
+            const copied = await copyToClipboard(shareText);
+            if (copied) {
+              chip.textContent = 'Grid copied — paste it!';
+              setTimeout(() => { chip.textContent = 'Facebook'; }, 2600);
+            }
+            window.open(facebookShareUrl(), '_blank', 'noopener');
+          },
+        },
+        {
+          label: 'Threads', method: 'threads',
+          go: () => window.open(threadsShareUrl(shareText), '_blank', 'noopener'),
+        },
+        {
+          label: 'WhatsApp', method: 'whatsapp',
+          go: () => window.open(whatsappShareUrl(shareText), '_blank', 'noopener'),
+        },
+        {
+          label: 'Text', method: 'sms',
+          go: () => { window.location.href = smsShareUrl(shareText); },
+        },
+      ];
+      for (const p of platforms) {
+        const chip = document.createElement('button');
+        chip.className = 'share-chip';
+        chip.type = 'button';
+        chip.textContent = p.label;
+        chip.addEventListener('click', () => {
+          trackShare(day, p.method, won, guesses);
+          p.go(chip);
+        });
+        chips.appendChild(chip);
+      }
+      inner.appendChild(chips);
+
       // Visit CR ghost button
+      const visitRow = document.createElement('div');
+      visitRow.className = 'btn-row';
       const visitBtn = document.createElement('button');
       visitBtn.className = 'btn btn--ghost';
       visitBtn.type = 'button';
@@ -260,8 +364,8 @@ export function showStats({
         trackVisitCRClick('stats_overlay');
         window.open('https://crcoffeenola.com/', '_blank', 'noopener');
       });
-      btnRow.appendChild(visitBtn);
-      inner.appendChild(btnRow);
+      visitRow.appendChild(visitBtn);
+      inner.appendChild(visitRow);
     }
 
     overlayEl().appendChild(inner);
